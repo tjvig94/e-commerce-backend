@@ -16,11 +16,11 @@ Product.init(
       autoIncrement: true
     },
     product_name: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false
     },
     price: {
-      type: DataTypes.DECIMAL(10,4), // <--------- CHECK ON THIS!!!!!!!!!!!
+      type: DataTypes.DECIMAL,
       allowNull: false,
       validate: {
         isDecimal: true
@@ -39,7 +39,6 @@ Product.init(
       references: {
         model: 'category',
         key: 'id'
-        // unique: false  ????? check on this
       }
     }
   },
