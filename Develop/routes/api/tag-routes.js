@@ -36,14 +36,44 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
   // create a new tag
+  Tag.create({
+    tag_name: req.body.tag_name
+  })
+  .then(newTag => res.status(200).json(newTag))
+  .catch(err => {
+    res.status(500).json(err);
+  })
 });
 
 router.put('/:id', (req, res) => {
   // update a tag's name by its `id` value
+  Tag.update(
+    {
+      tag_name: req.body.tag_name
+    },
+    {
+      where: {
+        id: req.params.id
+      }
+    }
+  )
+  .then(updatedTag => (updatedTag) ? res.status(200).json(updatedTag) : res.status(400).json({ message: "No tag found with that id"}))
+  .catch(err => {
+    res.status(500).json(err);
+  });
 });
 
 router.delete('/:id', (req, res) => {
   // delete on tag by its `id` value
+  Tag.destroy({
+    where: {
+      id: req.params.id
+    }
+  })
+  .then(destroyedTag => (destroyedTag) ? res.status(200).json({ message: "Tag destroyed!" }) : res.status(400).json({ message: "Could not find tag with that id."}))
+  .catch(err => {
+    res.status(500).json(err);
+  });
 });
 
 module.exports = router;
