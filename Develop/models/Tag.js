@@ -19,7 +19,6 @@ Tag.init(
   {
     sequelize,
     timestamps: false,
-    paranoid: true,
     freezeTableName: true,
     underscored: true,
     modelName: 'tag',
