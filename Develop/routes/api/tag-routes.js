@@ -9,8 +9,7 @@ router.get('/', (req, res) => {
   Tag.findAll({
     attributes: ['id', 'tag_name'],
     include: [{
-      model: Product,
-      attributes: ['id', 'product_name', 'price', 'stock', 'category_id']
+      model: Product
     }]
   })
   .then(tag => res.status(200).json(tag))
@@ -24,8 +23,7 @@ router.get('/:id', (req, res) => {
   // be sure to include its associated Product data
   Tag.findByPk(req.params.id, {
     include: [{
-      model: Product,
-      attributes: ['id', 'product_name', 'price', 'stock', 'category_id']
+      model: Product
     }]
   })
   .then(tag => (tag) ? res.status(200).json(tag) : res.status(400).json({ message: "No tag found with that id." }))
@@ -47,11 +45,7 @@ router.post('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
   // update a tag's name by its `id` value
-  Tag.update(
-    {
-      tag_name: req.body.tag_name
-    },
-    {
+  Tag.update(req.body, {
       where: {
         id: req.params.id
       }
@@ -70,7 +64,7 @@ router.delete('/:id', (req, res) => {
       id: req.params.id
     }
   })
-  .then(destroyedTag => (destroyedTag) ? res.status(200).json({ message: "Tag destroyed!" }) : res.status(400).json({ message: "Could not find tag with that id."}))
+  .then(tag => (tag) ? res.status(200).json(tag) : res.status(400).json({ message: "Could not find tag with that id."}))
   .catch(err => {
     res.status(500).json(err);
   });
