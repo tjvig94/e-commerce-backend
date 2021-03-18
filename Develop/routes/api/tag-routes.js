@@ -2,6 +2,9 @@ const router = require('express').Router();
 const { Tag, Product, ProductTag } = require('../../models');
 
 // The `/api/tags` endpoint
+notFound = {
+  message: "Tag not found."
+}
 
 router.get('/', (req, res) => {
   // find all tags
@@ -12,7 +15,7 @@ router.get('/', (req, res) => {
       model: Product
     }]
   })
-  .then(tag => res.status(200).json(tag))
+  .then(tag => (tag) ? res.status(200).json(tag) : res.status(404).json(notFound))
   .catch(err => {
     res.status(500).json(err)
   });
@@ -26,7 +29,7 @@ router.get('/:id', (req, res) => {
       model: Product
     }]
   })
-  .then(tag => (tag) ? res.status(200).json(tag) : res.status(400).json({ message: "No tag found with that id." }))
+  .then(tag => (tag) ? res.status(200).json(tag) : res.status(400).json(notFound))
   .catch(err => {
     res.status(500).json(err);
   });
@@ -37,7 +40,7 @@ router.post('/', (req, res) => {
   Tag.create({
     tag_name: req.body.tag_name
   })
-  .then(newTag => res.status(200).json(newTag))
+  .then(newTag => res.status(200).json(newTag)) 
   .catch(err => {
     res.status(500).json(err);
   })

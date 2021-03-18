@@ -3,6 +3,10 @@ const { Category, Product } = require('../../models');
 
 // The `/api/categories` endpoint
 
+const notFound = {
+  message: "No category found."
+};
+
 router.get('/', (req, res) => {
   // find all categories
   // be sure to include its associated Products
@@ -24,14 +28,14 @@ router.get('/:id', (req, res) => {
       model: Product
     }]
   })
-  .then(categoryData => (categoryData) ? res.status(200).json(categoryData) : res.status(404).json({ message: "No category found."}))       
+  .then(categoryData => (categoryData) ? res.status(200).json(categoryData) : res.status(404).json(notFound))       
   .catch(err => res.status(500).json(err))
 });
 
 router.post('/', (req, res) => {
   Category.create(req.body)
-  .then(newCategory => res.status(200).json(newCategory))
-  .catch(err => res.status(500).json(err)) 
+  .then(newCategory => (newCategory) ? res.status(200).json(newCategory) : res.status(404).json(notFound))
+  .catch(err => res.status(500).json(err))
 });
 
 router.put('/:id', (req, res) => {
@@ -40,7 +44,7 @@ router.put('/:id', (req, res) => {
       id: req.params.id
     }
   })
-  .then(category => res.status(200).json(category))
+  .then(category => (category) ? res.status(200).json(category) : res.status(404).json(notFound))
   .catch(err => res.status(500).json(err))
 });
 
@@ -51,7 +55,7 @@ router.delete('/:id', (req, res) => {
         id: req.params.id
       }
     })
-    .then(destroyedCategory => (destroyedCategory) ? res.status(200).json(destroyedCategory) : res.status(404).json({ message: "No category found to destroy." }))
+    .then(destroyedCategory => (destroyedCategory) ? res.status(200).json(destroyedCategory) : res.status(404).json(notFound))
     .catch(err => res.status(500).json(err));
 });
 

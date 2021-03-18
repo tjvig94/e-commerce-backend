@@ -2,6 +2,9 @@ const router = require('express').Router();
 const { Product, Category, Tag, ProductTag } = require('../../models');
 
 // The `/api/products` endpoint
+const notFound = {
+  message: "No product found."
+}
 
 // get all products
 router.get('/', (req, res) => {
@@ -17,7 +20,7 @@ router.get('/', (req, res) => {
           model: Category
         }]
     })
-    .then(productData => (productData) ? res.status(200).json(productData) : res.status(404).json({ message: "No products found." }))
+    .then(productData => (productData) ? res.status(200).json(productData) : res.status(404).json(notFound))
     .catch(err => res.status(500).json(err))
 });
 
@@ -35,7 +38,7 @@ router.get('/:id', (req, res) => {
       }
     ]
   })
-  .then(productData => (productData) ? res.status(200).json(productData) : res.status(404).json({ message: "No products found with that id." }))
+  .then(productData => (productData) ? res.status(200).json(productData) : res.status(404).json(notFound))
   .catch(err => res.status(500).json(err)) 
 });
 
